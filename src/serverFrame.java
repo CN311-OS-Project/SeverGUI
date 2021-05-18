@@ -48,7 +48,7 @@ public class serverFrame extends javax.swing.JFrame {
             try {
                 while ((text = input.readLine()) != null){
                     String data[] = text.split(",");
-                    serverArea.append(data[0] + ": " + data[1]);
+                    serverArea.append(data[0] + ": " + data[1] + "\n");
                     outToAll(data[0] + ": " + data[1]);
                     
 
