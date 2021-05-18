@@ -20,21 +20,22 @@ import java.util.logging.Logger;
  * @author acer
  */
 public class serverFrame extends javax.swing.JFrame {
+    private static String Chat = "Chat", Game = "Game", draw = "Draw";
 
     /**
      * Creates new form serverFrame
      */
-    
+
     Server server;
-    
+
     // Start ClientHandeler Part//
     public class ClientHandler implements Runnable {
-    private Socket client;
-    private BufferedReader input;
-    private PrintWriter output;
-    private ArrayList<ClientHandler> clients;
-    
-    public ClientHandler(Socket client, ArrayList<ClientHandler> clients) throws IOException {
+        private Socket client;
+        private BufferedReader input;
+        private PrintWriter output;
+        private ArrayList<ClientHandler> clients;
+
+        public ClientHandler(Socket client, ArrayList<ClientHandler> clients) throws IOException {
             this.client = client;
             this.clients = clients;
             input = new BufferedReader(new InputStreamReader(client.getInputStream()));
@@ -42,66 +43,74 @@ public class serverFrame extends javax.swing.JFrame {
         }
 
         @Override
-        public void run(){
-            String text ;
+        public void run() {
+            String text;
 
             try {
-                while ((text = input.readLine()) != null){
-                    String data[] = text.split(",");
-                    serverArea.append(data[0] + ": " + data[1] + "\n");
-                    outToAll(data[0] + ": " + data[1]);
-                    
-
+                while ((text = input.readLine()) != null) {
+                    String temp1[] = text.split(",");
+                    if (temp1[2].equals(Chat)) {
+                        serverArea.append(temp1[0] + ": " + temp1[1] + "  (state = " + temp1[2] + ")\n");
+                        outToAll(text);
+                    }
 
                 }
-            } catch (IOException e){
+            } catch (IOException e) {
                 System.err.println("Error reading");
                 System.err.println(e.getStackTrace());
             } finally {
                 output.close();
                 try {
                     input.close();
-                }catch (IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }
-        private void outToAll(String msg){
-            for (ClientHandler aClient : clients) {
-                aClient.output.println(msg);
+
+        private void outToAll(String msg) {
+            String temp2[] = msg.split(",");
+            
+            if (temp2[2].equals(Chat)) {
+                for (ClientHandler aClient : clients) {
+                    aClient.output.println(temp2[0] + "," + temp2[1] + "," + temp2[2]);
+                }
             }
+
         }
+
     }
     // End ClientHandeler Part//
-    
+
     // Start Server Part //
     public class Server implements Runnable {
-    private static final int PORT = 9090;
-    private ArrayList<ClientHandler> clients = new ArrayList<>(); 
+        private static final int PORT = 9090;
+        private ArrayList<ClientHandler> clients = new ArrayList<>();
 
-    @Override
-    public void run() {
-        try {
-            ServerSocket listener = new ServerSocket(PORT);
-            while (true) {
-            serverArea.append(" [Server] Waiting for client connection....\n");
-            Socket client = listener.accept();
-            for (ClientHandler s : clients) {
-                System.out.println(s);
+        @Override
+        public void run() {
+            try {
+                ServerSocket listener = new ServerSocket(PORT);
+                while (true) {
+                    serverArea.append(" [Server] Waiting for client connection....\n");
+                    Socket client = listener.accept();
+                    for (ClientHandler s : clients) {
+                        System.out.println(s);
+                    }
+                    serverArea.append(" [Server] connect to client!\n");
+                    ClientHandler client_thread = new ClientHandler(client, clients);
+                    clients.add(client_thread);
+                    Thread starter = new Thread(client_thread);
+                    starter.start();
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(serverFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
-            serverArea.append(" [Server] connect to client!\n");
-            ClientHandler client_thread = new ClientHandler(client, clients);
-            clients.add(client_thread);
-            Thread starter = new Thread(client_thread);
-            starter.start();
         }
-        } catch (IOException ex) {
-            Logger.getLogger(serverFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        // End Server Part //
+
     }
-    // End Server Part //
-    
-}
+
     public serverFrame() {
         initComponents();
     }
@@ -112,7 +121,8 @@ public class serverFrame extends javax.swing.JFrame {
      * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         startButton = new javax.swing.JButton();
@@ -134,46 +144,45 @@ public class serverFrame extends javax.swing.JFrame {
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(34, 34, 34)
+        layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout
+                .createSequentialGroup().addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(startButton)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 421, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(53, Short.MAX_VALUE))
-        );
+                        .addComponent(startButton).addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                421, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(53, Short.MAX_VALUE)));
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addComponent(startButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 433, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(46, Short.MAX_VALUE))
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
+                                layout.createSequentialGroup().addGap(30, 30, 30).addComponent(startButton)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 433,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addContainerGap(46, Short.MAX_VALUE)));
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
+    private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_startButtonActionPerformed
         // TODO add your handling code here:
         Thread starter = new Thread(new Server());
         starter.start();
-        
+
         serverArea.append("Server Started!!\n");
-        
-    }//GEN-LAST:event_startButtonActionPerformed
+
+    }// GEN-LAST:event_startButtonActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+        // <editor-fold defaultstate="collapsed" desc=" Look and feel setting code
+        // (optional) ">
+        /*
+         * If Nimbus (introduced in Java SE 6) is not available, stay with the default
+         * look and feel. For details see
+         * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -183,15 +192,19 @@ public class serverFrame extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(serverFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(serverFrame.class.getName()).log(java.util.logging.Level.SEVERE, null,
+                    ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(serverFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(serverFrame.class.getName()).log(java.util.logging.Level.SEVERE, null,
+                    ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(serverFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(serverFrame.class.getName()).log(java.util.logging.Level.SEVERE, null,
+                    ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(serverFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(serverFrame.class.getName()).log(java.util.logging.Level.SEVERE, null,
+                    ex);
         }
-        //</editor-fold>
+        // </editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
