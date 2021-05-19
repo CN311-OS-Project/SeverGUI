@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  * @author acer
  */
 public class serverFrame extends javax.swing.JFrame {
-    private static String Chat = "Chat", Game = "Game", draw = "Draw";
+    private static String Chat = "Chat", Game = "Game", draw = "Draw", username = "Username", len = "Array Length";
 
     /**
      * Creates new form serverFrame
@@ -34,13 +34,14 @@ public class serverFrame extends javax.swing.JFrame {
     ArrayList<String> ansLst, cluLst;
     private static String clueWord, ansWord;
     Random rand;
-
+    private ArrayList<String> userArr;
     // Start ClientHandeler Part//
     public class ClientHandler implements Runnable {
         private Socket client;
         private BufferedReader input;
         private PrintWriter output;
         private ArrayList<ClientHandler> clients;
+        
 
         public ClientHandler(Socket client, ArrayList<ClientHandler> clients) throws IOException {
             this.client = client;
@@ -56,10 +57,25 @@ public class serverFrame extends javax.swing.JFrame {
             try {
                 while ((text = input.readLine()) != null) {
                     String temp1[] = text.split(",");
-                    if (temp1[2].equals(Chat)) {
-                        serverArea.append(temp1[0] + ": " + temp1[1] + "  (state = " + temp1[2] + ")\n");
-                        outToAll(text);
+                    int lastIndex = temp1.length - 1;
+                    try {
+                        if (temp1[lastIndex].equals(Chat)) {
+                          serverArea.append(temp1[0] + ": " + temp1[1] + "  (state = " + temp1[lastIndex] + ")\n");
+                          outToAll(text);
+                      }
+                    
+                       else if(temp1[lastIndex].equals(username)) {
+                            userArr.add(temp1[0]);
+                            output.println(text);
+                            outToAll(text);                           
+                            serverArea.append(temp1[0] + " has joined\n");
+
+                       }
+                       
+                    } catch(Exception e) {
+                        
                     }
+                    
 
                 }
             } catch (IOException e) {
@@ -77,12 +93,21 @@ public class serverFrame extends javax.swing.JFrame {
 
         private void outToAll(String msg) {
             String temp2[] = msg.split(",");
+            int lastIndex = temp2.length - 1;
             
-            if (temp2[2].equals(Chat)) {
+            if (temp2[lastIndex].equals(Chat)) {
                 for (ClientHandler aClient : clients) {
-                    aClient.output.println(temp2[0] + "," + temp2[1] + "," + temp2[2]);
+                    aClient.output.println(temp2[0] + "," + temp2[1] + "," + temp2[lastIndex]);
                 }
             }
+            else if(temp2[lastIndex].equals(username)) {
+                for (ClientHandler aClient : clients) {
+                    aClient.output.println(msg);
+                    aClient.output.println(String.valueOf(userArr.size())+ "," + len);
+                }
+                            
+
+            } 
 
         }
 
@@ -118,6 +143,7 @@ public class serverFrame extends javax.swing.JFrame {
     // End Server Part //
     public serverFrame() {
         initComponents();
+        userArr = new ArrayList<>();
         randomWord(rand);
         manageWord();
         serverArea.append("Random Word: "+ ansWord + "\n");
