@@ -8,6 +8,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
@@ -25,8 +26,8 @@ import java.util.logging.Logger;
  */
 public class serverFrame extends javax.swing.JFrame {
     private static String Chat = "Chat", Game = "Game", username = "Username", len = "Array Length",
-            turn = "Player Turn";
-
+            turn = "Player Turn", coordinate = "Send coordiante", timeOut = "Time Out";
+    
     /**
      * Creates new form serverFrame
      */
@@ -35,6 +36,8 @@ public class serverFrame extends javax.swing.JFrame {
     ArrayList<String> ansLst, cluLst;
     private static String clueWord, ansWord;
     Random rand;
+    int i = 0;
+    int count = 0;
     private ArrayList<String> userArr;
 
     // Start ClientHandeler Part//
@@ -68,10 +71,20 @@ public class serverFrame extends javax.swing.JFrame {
 
                             if (userArr.size() > 1) {
                                 outToAll(userArr.get(0) + "," + turn);
+  
                             }
                         } else if (temp1[lastIndex].equals(Chat)) {
                             serverArea.append(temp1[0] + ": " + temp1[1] + "  (state = " + temp1[lastIndex] + ")\n");
                             outToAll(text);
+                        }
+                        
+                        else if(temp1[lastIndex].equals(coordinate)) {
+                            outToAll(text);
+                        }
+                        
+                        else if(temp1[lastIndex].equals(timeOut)) {
+                            outToAll(userArr.get(1) + "," + turn);   
+
                         }
 
                     } catch (Exception e) {
@@ -106,10 +119,19 @@ public class serverFrame extends javax.swing.JFrame {
                     aClient.output.println(String.valueOf(userArr.size()) + "," + len);
                 }
             } else if (temp2[lastIndex].equals(turn)) {
+                
                 for (ClientHandler aClient : clients) {
-                    aClient.output.println(temp2[0] + "," + temp2[lastIndex]);
+                    aClient.output.println(temp2[0]+","+ ansWord + "," + temp2[lastIndex]);
+                }
+                randomWord(rand);
+                
+            }
+            else if(temp2[lastIndex].equals(coordinate)) {
+                for (ClientHandler aClient : clients) {
+                    aClient.output.println(msg);
                 }
             }
+            
 
         }
 
@@ -150,7 +172,7 @@ public class serverFrame extends javax.swing.JFrame {
         randomWord(rand);
         manageWord();
         serverArea.append("Random Word: " + ansWord + "\n");
-        serverArea.append("Clue Word: " + clueWord + "\n");
+        
     }
 
     /** Manage String And Array **/
