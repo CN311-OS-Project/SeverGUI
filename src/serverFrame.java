@@ -87,7 +87,7 @@ public class serverFrame extends javax.swing.JFrame {
         }
 
     }
-    // End ClientHandeler Part//
+    // End ClientHandeler Part //
 
     // Start Server Part //
     public class Server implements Runnable {
@@ -102,7 +102,7 @@ public class serverFrame extends javax.swing.JFrame {
                     serverArea.append("Waiting for client connection....\n");
                     Socket client = listener.accept();
                     for (ClientHandler s : clients) {
-                        System.out.println(s);
+                        serverArea.append(s.toString()+" Connected!!\n");
                     }
                     serverArea.append("Connect to client!\n");
                     ClientHandler client_thread = new ClientHandler(client, clients);
@@ -114,46 +114,53 @@ public class serverFrame extends javax.swing.JFrame {
                 Logger.getLogger(serverFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        // End Server Part //
-
     }
-
+    // End Server Part //
     public serverFrame() {
         initComponents();
         randomWord(rand);
-        System.out.println(ansWord);
+        manageWord();
+        serverArea.append("Random Word: "+ ansWord + "\n");
+        serverArea.append("Clue Word: "+ clueWord + "\n");
     }
     
+    /** Manage String And Array **/
+    public void manageWord() {
+        ansLst = splitString(ansWord);    
+        clueWord = repeat(ansWord.length(), "_");
+        cluLst = splitString(clueWord);
+    }
+    
+    /** Random 1 Word In Array **/
     public static void randomWord(Random rand) {
         try{
-            BufferedReader reader = new BufferedReader(new FileReader("nouns.txt"));
+            BufferedReader reader = new BufferedReader(new FileReader("nouns.txt")); // Read File From File Text
             String line = reader.readLine();
-            List<String> words = new ArrayList<String>();
+            List<String> words = new ArrayList<>();
             while(line != null) {
                 String[] wordsLine = line.split(" ");
-                for(String word : wordsLine) {
-                    words.add(word);
-                }
+                words.addAll(Arrays.asList(wordsLine)); // Add all word to list (like foreach)
                 line = reader.readLine();
             }
             rand = new Random(System.currentTimeMillis());
             String word = words.get(rand.nextInt(words.size()));
-            ansWord = word;
-            
-        }   catch (Exception e) {
+            ansWord = word.substring(0, 1).toUpperCase() + word.substring(1); // Capitalize The First Letter Of Word
+        
+        }   catch (IOException e) {
          // Handle this
         }
     }
     
+    /**  Convert Array To String **/
     public static String arrToString(ArrayList<String> arr) {
         String tempString = "";
-        for (String s : arr)
-        {
+        for (String s : arr) {
             tempString += s + " ";
         }
         return tempString;
     }
     
+    /** Split String To ArrayLists **/
     public static ArrayList<String> splitString(String word) {
         String[] tempArr;
         tempArr = word.split("");
@@ -162,6 +169,12 @@ public class serverFrame extends javax.swing.JFrame {
         return arrLst;
         
     }
+    
+    /** Replace All String To Something **/
+    public static String repeat(int count, String with) {
+        return new String(new char[count]).replace("\0", with);
+    }
+        
     
     
     /**
@@ -257,6 +270,7 @@ public class serverFrame extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new serverFrame().setVisible(true);
             }
