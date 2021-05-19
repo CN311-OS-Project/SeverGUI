@@ -59,18 +59,19 @@ public class serverFrame extends javax.swing.JFrame {
                     String temp1[] = text.split(",");
                     int lastIndex = temp1.length - 1;
                     try {
-                        if (temp1[lastIndex].equals(Chat)) {
+
+                        if(temp1[lastIndex].equals(username)) {
+                            userArr.add(temp1[0]);
+
+                            outToAll(text);                           
+                            serverArea.append(temp1[0] + " has joined\n");
+                       }
+                        else if (temp1[lastIndex].equals(Chat)) {
                           serverArea.append(temp1[0] + ": " + temp1[1] + "  (state = " + temp1[lastIndex] + ")\n");
                           outToAll(text);
                       }
                     
-                       else if(temp1[lastIndex].equals(username)) {
-                            userArr.add(temp1[0]);
-                            output.println(text);
-                            outToAll(text);                           
-                            serverArea.append(temp1[0] + " has joined\n");
-
-                       }
+                       
                        
                     } catch(Exception e) {
                         
