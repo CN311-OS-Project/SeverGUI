@@ -1,11 +1,15 @@
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,6 +31,9 @@ public class serverFrame extends javax.swing.JFrame {
      */
 
     Server server;
+    ArrayList<String> ansLst, cluLst;
+    private static String clueWord, ansWord;
+    Random rand;
 
     // Start ClientHandeler Part//
     public class ClientHandler implements Runnable {
@@ -92,12 +99,12 @@ public class serverFrame extends javax.swing.JFrame {
             try {
                 ServerSocket listener = new ServerSocket(PORT);
                 while (true) {
-                    serverArea.append(" [Server] Waiting for client connection....\n");
+                    serverArea.append("Waiting for client connection....\n");
                     Socket client = listener.accept();
                     for (ClientHandler s : clients) {
                         System.out.println(s);
                     }
-                    serverArea.append(" [Server] connect to client!\n");
+                    serverArea.append("Connect to client!\n");
                     ClientHandler client_thread = new ClientHandler(client, clients);
                     clients.add(client_thread);
                     Thread starter = new Thread(client_thread);
@@ -113,8 +120,50 @@ public class serverFrame extends javax.swing.JFrame {
 
     public serverFrame() {
         initComponents();
+        randomWord(rand);
+        System.out.println(ansWord);
     }
-
+    
+    public static void randomWord(Random rand) {
+        try{
+            BufferedReader reader = new BufferedReader(new FileReader("nouns.txt"));
+            String line = reader.readLine();
+            List<String> words = new ArrayList<String>();
+            while(line != null) {
+                String[] wordsLine = line.split(" ");
+                for(String word : wordsLine) {
+                    words.add(word);
+                }
+                line = reader.readLine();
+            }
+            rand = new Random(System.currentTimeMillis());
+            String word = words.get(rand.nextInt(words.size()));
+            ansWord = word;
+            
+        }   catch (Exception e) {
+         // Handle this
+        }
+    }
+    
+    public static String arrToString(ArrayList<String> arr) {
+        String tempString = "";
+        for (String s : arr)
+        {
+            tempString += s + " ";
+        }
+        return tempString;
+    }
+    
+    public static ArrayList<String> splitString(String word) {
+        String[] tempArr;
+        tempArr = word.split("");
+        List<String> fixedLenghtList = Arrays.asList(tempArr);
+        ArrayList<String> arrLst = new ArrayList<>(fixedLenghtList);
+        return arrLst;
+        
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
