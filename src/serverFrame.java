@@ -24,7 +24,8 @@ import java.util.logging.Logger;
  * @author acer
  */
 public class serverFrame extends javax.swing.JFrame {
-    private static String Chat = "Chat", Game = "Game", username = "Username", len = "Array Length", turn = "Player Turn";
+    private static String Chat = "Chat", Game = "Game", username = "Username", len = "Array Length",
+            turn = "Player Turn";
 
     /**
      * Creates new form serverFrame
@@ -35,13 +36,13 @@ public class serverFrame extends javax.swing.JFrame {
     private static String clueWord, ansWord;
     Random rand;
     private ArrayList<String> userArr;
+
     // Start ClientHandeler Part//
     public class ClientHandler implements Runnable {
         private Socket client;
         private BufferedReader input;
         private PrintWriter output;
         private ArrayList<ClientHandler> clients;
-        
 
         public ClientHandler(Socket client, ArrayList<ClientHandler> clients) throws IOException {
             this.client = client;
@@ -60,23 +61,22 @@ public class serverFrame extends javax.swing.JFrame {
                     int lastIndex = temp1.length - 1;
                     try {
 
-                        if(temp1[lastIndex].equals(username)) {
+                        if (temp1[lastIndex].equals(username)) {
                             userArr.add(temp1[0]);
-
-                            outToAll(text);                           
+                            outToAll(text);
                             serverArea.append(temp1[0] + " has joined\n");
-                       }
-                        else if (temp1[lastIndex].equals(Chat)) {
-                          serverArea.append(temp1[0] + ": " + temp1[1] + "  (state = " + temp1[lastIndex] + ")\n");
-                          outToAll(text);
-                      }
-                    
-                       
-                       
-                    } catch(Exception e) {
-                        
+
+                            if (userArr.size() > 1) {
+                                outToAll(userArr.get(0) + "," + turn);
+                            }
+                        } else if (temp1[lastIndex].equals(Chat)) {
+                            serverArea.append(temp1[0] + ": " + temp1[1] + "  (state = " + temp1[lastIndex] + ")\n");
+                            outToAll(text);
+                        }
+
+                    } catch (Exception e) {
+
                     }
-                    
 
                 }
             } catch (IOException e) {
@@ -95,20 +95,21 @@ public class serverFrame extends javax.swing.JFrame {
         private void outToAll(String msg) {
             String temp2[] = msg.split(",");
             int lastIndex = temp2.length - 1;
-            
+
             if (temp2[lastIndex].equals(Chat)) {
                 for (ClientHandler aClient : clients) {
                     aClient.output.println(temp2[0] + "," + temp2[1] + "," + temp2[lastIndex]);
                 }
-            }
-            else if(temp2[lastIndex].equals(username)) {
+            } else if (temp2[lastIndex].equals(username)) {
                 for (ClientHandler aClient : clients) {
                     aClient.output.println(msg);
-                    aClient.output.println(String.valueOf(userArr.size())+ "," + len);
+                    aClient.output.println(String.valueOf(userArr.size()) + "," + len);
                 }
-                            
-
-            } 
+            } else if (temp2[lastIndex].equals(turn)) {
+                for (ClientHandler aClient : clients) {
+                    aClient.output.println(temp2[0] + "," + temp2[lastIndex]);
+                }
+            }
 
         }
 
@@ -128,7 +129,7 @@ public class serverFrame extends javax.swing.JFrame {
                     serverArea.append("Waiting for client connection....\n");
                     Socket client = listener.accept();
                     for (ClientHandler s : clients) {
-                        serverArea.append(s.toString()+" Connected!!\n");
+                        serverArea.append(s.toString() + " Connected!!\n");
                     }
                     serverArea.append("Connect to client!\n");
                     ClientHandler client_thread = new ClientHandler(client, clients);
@@ -141,30 +142,31 @@ public class serverFrame extends javax.swing.JFrame {
             }
         }
     }
+
     // End Server Part //
     public serverFrame() {
         initComponents();
         userArr = new ArrayList<>();
         randomWord(rand);
         manageWord();
-        serverArea.append("Random Word: "+ ansWord + "\n");
-        serverArea.append("Clue Word: "+ clueWord + "\n");
+        serverArea.append("Random Word: " + ansWord + "\n");
+        serverArea.append("Clue Word: " + clueWord + "\n");
     }
-    
+
     /** Manage String And Array **/
     public void manageWord() {
-        ansLst = splitString(ansWord);    
+        ansLst = splitString(ansWord);
         clueWord = repeat(ansWord.length(), "_");
         cluLst = splitString(clueWord);
     }
-    
+
     /** Random 1 Word In Array **/
     public static void randomWord(Random rand) {
-        try{
+        try {
             BufferedReader reader = new BufferedReader(new FileReader("nouns.txt")); // Read File From File Text
             String line = reader.readLine();
             List<String> words = new ArrayList<>();
-            while(line != null) {
+            while (line != null) {
                 String[] wordsLine = line.split(" ");
                 words.addAll(Arrays.asList(wordsLine)); // Add all word to list (like foreach)
                 line = reader.readLine();
@@ -172,13 +174,13 @@ public class serverFrame extends javax.swing.JFrame {
             rand = new Random(System.currentTimeMillis());
             String word = words.get(rand.nextInt(words.size()));
             ansWord = word.substring(0, 1).toUpperCase() + word.substring(1); // Capitalize The First Letter Of Word
-        
-        }   catch (IOException e) {
-         // Handle this
+
+        } catch (IOException e) {
+            // Handle this
         }
     }
-    
-    /**  Convert Array To String **/
+
+    /** Convert Array To String **/
     public static String arrToString(ArrayList<String> arr) {
         String tempString = "";
         for (String s : arr) {
@@ -186,7 +188,7 @@ public class serverFrame extends javax.swing.JFrame {
         }
         return tempString;
     }
-    
+
     /** Split String To ArrayLists **/
     public static ArrayList<String> splitString(String word) {
         String[] tempArr;
@@ -194,16 +196,14 @@ public class serverFrame extends javax.swing.JFrame {
         List<String> fixedLenghtList = Arrays.asList(tempArr);
         ArrayList<String> arrLst = new ArrayList<>(fixedLenghtList);
         return arrLst;
-        
+
     }
-    
+
     /** Replace All String To Something **/
     public static String repeat(int count, String with) {
         return new String(new char[count]).replace("\0", with);
     }
-        
-    
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
