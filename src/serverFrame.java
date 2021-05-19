@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  * @author acer
  */
 public class serverFrame extends javax.swing.JFrame {
-    private static String Chat = "Chat", Game = "Game", draw = "Draw", username = "Username", len = "Array Length";
+    private static String Chat = "Chat", Game = "Game", username = "Username", len = "Array Length", turn = "Player Turn";
 
     /**
      * Creates new form serverFrame
