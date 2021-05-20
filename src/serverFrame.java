@@ -30,7 +30,7 @@ import java.util.logging.Logger;
  */
 public class serverFrame extends javax.swing.JFrame {
     private static String Chat = "Chat", username = "Username", len = "Array Length",
-            turn = "Player Turn", coordinate = "Send coordiante", timeOut = "Time Out", isWin = "Who Win";
+            turn = "Player Turn", coordinate = "Send coordiante", timeOut = "Time Out", isWin = "Who Win", clearPaint = "Clear Painting";
     
     /**
      * Creates new form serverFrame
@@ -97,6 +97,10 @@ public class serverFrame extends javax.swing.JFrame {
                         else if(temp1[lastIndex].equals(isWin)) {
                             outToAll(text);
                         }
+                        
+                        else if(temp1[lastIndex].equals(clearPaint)) {
+                            outToAll(text);
+                        }
 
                         } catch (Exception e) {  }
 
@@ -145,6 +149,12 @@ public class serverFrame extends javax.swing.JFrame {
             else if(temp2[lastIndex].equals(isWin)) {
                 for (ClientHandler aClient : clients) {
                     aClient.output.println(temp2[0]+","+" Win!!"+","+isWin);
+                }
+            }
+            
+            else if(temp2[lastIndex].equals(clearPaint)) {
+                for (ClientHandler aClient : clients) {
+                    aClient.output.println(msg);
                 }
             }
             
