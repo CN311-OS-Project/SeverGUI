@@ -71,7 +71,7 @@ public class serverFrame extends javax.swing.JFrame {
 
                             if (userArr.size() > 1) {
                                 outToAll(userArr.get(0) + "," + turn);
-  
+                                count++;
                             }
                         } else if (temp1[lastIndex].equals(Chat)) {
                             serverArea.append(temp1[0] + ": " + temp1[1] + "  (state = " + temp1[lastIndex] + ")\n");
@@ -83,7 +83,13 @@ public class serverFrame extends javax.swing.JFrame {
                         }
                         
                         else if(temp1[lastIndex].equals(timeOut)) {
-                            outToAll(userArr.get(1) + "," + turn);   
+                            System.out.println(count%2 + " " + count);
+                            if (count%2 == 0) {
+                                outToAll(userArr.get(0) + "," + turn);
+                            }else {
+                                outToAll(userArr.get(1) + "," + turn);
+                            }count++;
+                               
 
                         }
 
