@@ -25,8 +25,8 @@ import java.util.logging.Logger;
  * @author acer
  */
 public class serverFrame extends javax.swing.JFrame {
-    private static String Chat = "Chat", Game = "Game", username = "Username", len = "Array Length",
-            turn = "Player Turn", coordinate = "Send coordiante", timeOut = "Time Out";
+    private static String Chat = "Chat", username = "Username", len = "Array Length",
+            turn = "Player Turn", coordinate = "Send coordiante", timeOut = "Time Out", isWin = "Who Win";
     
     /**
      * Creates new form serverFrame
@@ -82,20 +82,19 @@ public class serverFrame extends javax.swing.JFrame {
                             outToAll(text);
                         }
                         
-                        else if(temp1[lastIndex].equals(timeOut)) {
-                            System.out.println(count%2 + " " + count);
+                        else if(temp1[lastIndex].equals(timeOut)) {                           
                             if (count%2 == 0) {
                                 outToAll(userArr.get(0) + "," + turn);
                             }else {
                                 outToAll(userArr.get(1) + "," + turn);
                             }count++;
-                               
-
+                        }
+                        
+                        else if(temp1[lastIndex].equals(isWin)) {
+                            outToAll(text);
                         }
 
-                    } catch (Exception e) {
-
-                    }
+                        } catch (Exception e) {  }
 
                 }
             } catch (IOException e) {
@@ -138,7 +137,12 @@ public class serverFrame extends javax.swing.JFrame {
                 }
             }
             
-
+            else if(temp2[lastIndex].equals(isWin)) {
+                for (ClientHandler aClient : clients) {
+                    aClient.output.println(temp2[0]+","+" Win!!"+","+isWin);
+                }
+            }
+            
         }
 
     }
@@ -308,20 +312,10 @@ public class serverFrame extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(serverFrame.class.getName()).log(java.util.logging.Level.SEVERE, null,
-                    ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(serverFrame.class.getName()).log(java.util.logging.Level.SEVERE, null,
-                    ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(serverFrame.class.getName()).log(java.util.logging.Level.SEVERE, null,
-                    ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(serverFrame.class.getName()).log(java.util.logging.Level.SEVERE, null,
                     ex);
         }
-        // </editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
