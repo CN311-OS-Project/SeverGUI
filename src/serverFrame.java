@@ -36,8 +36,7 @@ public class serverFrame extends javax.swing.JFrame {
     ArrayList<String> ansLst, cluLst;
     private static String clueWord, ansWord;
     Random rand;
-    int i = 0;
-    int count = 0;
+    private int count = 0, xx,yy;
     private ArrayList<String> userArr;
 
     // Start ClientHandeler Part//
@@ -129,6 +128,7 @@ public class serverFrame extends javax.swing.JFrame {
                     aClient.output.println(temp2[0]+","+ ansWord + "," + temp2[lastIndex]);
                 }
                 randomWord(rand);
+                serverArea.append("Random Word: " + ansWord + "\n");
                 
             }
             else if(temp2[lastIndex].equals(coordinate)) {
@@ -204,8 +204,7 @@ public class serverFrame extends javax.swing.JFrame {
                 line = reader.readLine();
             }
             rand = new Random(System.currentTimeMillis());
-            String word = words.get(rand.nextInt(words.size()));
-            ansWord = word.substring(0, 1).toUpperCase() + word.substring(1); // Capitalize The First Letter Of Word
+            ansWord = words.get(rand.nextInt(words.size()));
 
         } catch (IOException e) {
             // Handle this
@@ -243,14 +242,21 @@ public class serverFrame extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
-    // Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         startButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         serverArea = new javax.swing.JTextArea();
+        titleBar = new javax.swing.JPanel();
+        titleExit = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         startButton.setText("Start");
         startButton.addActionListener(new java.awt.event.ActionListener() {
@@ -258,31 +264,103 @@ public class serverFrame extends javax.swing.JFrame {
                 startButtonActionPerformed(evt);
             }
         });
+        getContentPane().add(startButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 80, 30));
 
         serverArea.setColumns(20);
         serverArea.setRows(5);
         jScrollPane1.setViewportView(serverArea);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout
-                .createSequentialGroup().addGap(34, 34, 34)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(startButton).addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                421, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(53, Short.MAX_VALUE)));
-        layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
-                                layout.createSequentialGroup().addGap(30, 30, 30).addComponent(startButton)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 433,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addContainerGap(46, Short.MAX_VALUE)));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, 462, 433));
+
+        titleBar.setBackground(new java.awt.Color(12, 52, 132));
+        titleBar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        titleBar.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                titleBarMouseDragged(evt);
+            }
+        });
+        titleBar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                titleBarMousePressed(evt);
+            }
+        });
+
+        titleExit.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        titleExit.setForeground(new java.awt.Color(255, 102, 102));
+        titleExit.setText("X");
+        titleExit.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        titleExit.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                titleExitMouseClicked(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("FC Lamoon", 0, 48)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("sketch.io server");
+
+        javax.swing.GroupLayout titleBarLayout = new javax.swing.GroupLayout(titleBar);
+        titleBar.setLayout(titleBarLayout);
+        titleBarLayout.setHorizontalGroup(
+            titleBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(titleBarLayout.createSequentialGroup()
+                .addContainerGap(116, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(102, 102, 102)
+                .addComponent(titleExit)
+                .addContainerGap())
+        );
+        titleBarLayout.setVerticalGroup(
+            titleBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(titleBarLayout.createSequentialGroup()
+                .addGroup(titleBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(titleExit)
+                    .addComponent(jLabel1))
+                .addGap(3, 3, 3))
+        );
+
+        getContentPane().add(titleBar, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 500, 50));
+
+        jPanel1.setBackground(new java.awt.Color(12, 52, 132));
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 500, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+        );
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 590, 500, 30));
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bg.jpg"))); // NOI18N
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, 50, 510, 540));
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void titleExitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_titleExitMouseClicked
+        // TODO add your handling code here:
+        System.exit(0);
+    }//GEN-LAST:event_titleExitMouseClicked
+
+    private void titleBarMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_titleBarMouseDragged
+
+        // Drag Window Program
+        int x = evt.getXOnScreen();
+        int y = evt.getYOnScreen();
+        this.setLocation(x-xx,y-yy);
+    }//GEN-LAST:event_titleBarMouseDragged
+
+    private void titleBarMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_titleBarMousePressed
+        // TODO add your handling code here:
+        xx = evt.getX();
+        yy = evt.getY();
+    }//GEN-LAST:event_titleBarMousePressed
 
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_startButtonActionPerformed
         // TODO add your handling code here:
@@ -327,8 +405,13 @@ public class serverFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea serverArea;
     private javax.swing.JButton startButton;
+    private javax.swing.JPanel titleBar;
+    private javax.swing.JLabel titleExit;
     // End of variables declaration//GEN-END:variables
 }
