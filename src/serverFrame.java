@@ -1,5 +1,9 @@
 
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -38,6 +42,7 @@ public class serverFrame extends javax.swing.JFrame {
     Random rand;
     private int count = 0, xx,yy;
     private ArrayList<String> userArr;
+    Font fontTitle;
 
     // Start ClientHandeler Part//
     public class ClientHandler implements Runnable {
@@ -179,11 +184,14 @@ public class serverFrame extends javax.swing.JFrame {
     public serverFrame() {
         initComponents();
         userArr = new ArrayList<>();
+        
         randomWord(rand);
         manageWord();
         serverArea.append("Random Word: " + ansWord + "\n");
         
     }
+    
+
 
     /** Manage String And Array **/
     public void manageWord() {
@@ -250,7 +258,7 @@ public class serverFrame extends javax.swing.JFrame {
         serverArea = new javax.swing.JTextArea();
         titleBar = new javax.swing.JPanel();
         titleExit = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
+        titleName = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
 
@@ -295,18 +303,18 @@ public class serverFrame extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("FC Lamoon", 0, 48)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("sketch.io server");
+        titleName.setFont(new java.awt.Font("Tempus Sans ITC", 1, 36)); // NOI18N
+        titleName.setForeground(new java.awt.Color(255, 255, 255));
+        titleName.setText("sketch.io server");
 
         javax.swing.GroupLayout titleBarLayout = new javax.swing.GroupLayout(titleBar);
         titleBar.setLayout(titleBarLayout);
         titleBarLayout.setHorizontalGroup(
             titleBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(titleBarLayout.createSequentialGroup()
-                .addContainerGap(116, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(102, 102, 102)
+                .addContainerGap(120, Short.MAX_VALUE)
+                .addComponent(titleName)
+                .addGap(103, 103, 103)
                 .addComponent(titleExit)
                 .addContainerGap())
         );
@@ -315,7 +323,7 @@ public class serverFrame extends javax.swing.JFrame {
             .addGroup(titleBarLayout.createSequentialGroup()
                 .addGroup(titleBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(titleExit)
-                    .addComponent(jLabel1))
+                    .addComponent(titleName))
                 .addGap(3, 3, 3))
         );
 
@@ -405,7 +413,6 @@ public class serverFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
@@ -413,5 +420,6 @@ public class serverFrame extends javax.swing.JFrame {
     private javax.swing.JButton startButton;
     private javax.swing.JPanel titleBar;
     private javax.swing.JLabel titleExit;
+    private javax.swing.JLabel titleName;
     // End of variables declaration//GEN-END:variables
 }
