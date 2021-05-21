@@ -29,20 +29,21 @@ import java.util.logging.Logger;
  * @author acer
  */
 public class serverFrame extends javax.swing.JFrame {
-    private static String Chat = "Chat", username = "Username", len = "Array Length",
-            turn = "Player Turn", coordinate = "Send coordiante", timeOut = "Time Out", isWin = "Who Win", clearPaint = "Clear Painting";
-    
+    /** Set state */
+    private static String Chat = "Chat", username = "Username", len = "Array Length", turn = "Player Turn",
+            coordinate = "Send coordiante", timeOut = "Time Out", isWin = "Who Win", clearPaint = "Clear Painting";
+
     /**
      * Creates new form serverFrame
      */
 
     Server server;
+    Random rand;
+    Font fontTitle;
     ArrayList<String> ansLst, cluLst;
     private static String clueWord, ansWord;
-    Random rand;
-    private int count = 0, xx,yy;
+    private int count = 0, xx, yy;
     private ArrayList<String> userArr;
-    Font fontTitle;
 
     // Start ClientHandeler Part//
     public class ClientHandler implements Runnable {
@@ -50,6 +51,9 @@ public class serverFrame extends javax.swing.JFrame {
         private BufferedReader input;
         private PrintWriter output;
         private ArrayList<ClientHandler> clients;
+        String text, temp1[], temp2[];
+        int lastIndex;
+        
 
         public ClientHandler(Socket client, ArrayList<ClientHandler> clients) throws IOException {
             this.client = client;
@@ -60,12 +64,13 @@ public class serverFrame extends javax.swing.JFrame {
 
         @Override
         public void run() {
-            String text;
+
+            /** wait for client sent data and check state of data */
 
             try {
                 while ((text = input.readLine()) != null) {
-                    String temp1[] = text.split(",");
-                    int lastIndex = temp1.length - 1;
+                    temp1 = text.split(",");
+                    lastIndex = temp1.length - 1;
                     try {
 
                         if (temp1[lastIndex].equals(username)) {
@@ -81,28 +86,30 @@ public class serverFrame extends javax.swing.JFrame {
                             serverArea.append(temp1[0] + ": " + temp1[1] + "  (state = " + temp1[lastIndex] + ")\n");
                             outToAll(text);
                         }
-                        
-                        else if(temp1[lastIndex].equals(coordinate)) {
-                            outToAll(text);
-                        }
-                        
-                        else if(temp1[lastIndex].equals(timeOut)) {                           
-                            if (count%2 == 0) {
-                                outToAll(userArr.get(0) + "," + turn);
-                            }else {
-                                outToAll(userArr.get(1) + "," + turn);
-                            }count++;
-                        }
-                        
-                        else if(temp1[lastIndex].equals(isWin)) {
-                            outToAll(text);
-                        }
-                        
-                        else if(temp1[lastIndex].equals(clearPaint)) {
+
+                        else if (temp1[lastIndex].equals(coordinate)) {
                             outToAll(text);
                         }
 
-                        } catch (Exception e) {  }
+                        else if (temp1[lastIndex].equals(timeOut)) {
+                            if (count % 2 == 0) {
+                                outToAll(userArr.get(0) + "," + turn);
+                            } else {
+                                outToAll(userArr.get(1) + "," + turn);
+                            }
+                            count++;
+                        }
+
+                        else if (temp1[lastIndex].equals(isWin)) {
+                            outToAll(text);
+                        }
+
+                        else if (temp1[lastIndex].equals(clearPaint)) {
+                            outToAll(text);
+                        }
+
+                    } catch (Exception e) {
+                    }
 
                 }
             } catch (IOException e) {
@@ -118,9 +125,10 @@ public class serverFrame extends javax.swing.JFrame {
             }
         }
 
+        /** Sent data to all users and set conditions before sent data */
         private void outToAll(String msg) {
-            String temp2[] = msg.split(",");
-            int lastIndex = temp2.length - 1;
+            temp2 = msg.split(",");
+            lastIndex = temp2.length - 1;
 
             if (temp2[lastIndex].equals(Chat)) {
                 for (ClientHandler aClient : clients) {
@@ -132,32 +140,31 @@ public class serverFrame extends javax.swing.JFrame {
                     aClient.output.println(String.valueOf(userArr.size()) + "," + len);
                 }
             } else if (temp2[lastIndex].equals(turn)) {
-                
+
                 for (ClientHandler aClient : clients) {
-                    aClient.output.println(temp2[0]+","+ ansWord + "," + temp2[lastIndex]);
+                    aClient.output.println(temp2[0] + "," + ansWord + "," + temp2[lastIndex]);
                 }
                 randomWord(rand);
                 serverArea.append("Random Word: " + ansWord + "\n");
-                
-            }
-            else if(temp2[lastIndex].equals(coordinate)) {
+
+            } else if (temp2[lastIndex].equals(coordinate)) {
                 for (ClientHandler aClient : clients) {
                     aClient.output.println(msg);
                 }
             }
-            
-            else if(temp2[lastIndex].equals(isWin)) {
+
+            else if (temp2[lastIndex].equals(isWin)) {
                 for (ClientHandler aClient : clients) {
-                    aClient.output.println(temp2[0]+","+" Win!!"+","+isWin);
+                    aClient.output.println(temp2[0] + "," + " Win!!" + "," + isWin);
                 }
             }
-            
-            else if(temp2[lastIndex].equals(clearPaint)) {
+
+            else if (temp2[lastIndex].equals(clearPaint)) {
                 for (ClientHandler aClient : clients) {
                     aClient.output.println(msg);
                 }
             }
-            
+
         }
 
     }
@@ -168,17 +175,27 @@ public class serverFrame extends javax.swing.JFrame {
         private static final int PORT = 9090;
         private ArrayList<ClientHandler> clients = new ArrayList<>();
 
+        /** Creates a new Socket Server */
+
         @Override
         public void run() {
             try {
                 ServerSocket listener = new ServerSocket(PORT);
                 while (true) {
                     serverArea.append("Waiting for client connection....\n");
+
+                    /** wait for client connection */
+
                     Socket client = listener.accept();
                     for (ClientHandler s : clients) {
                         serverArea.append(s.toString() + " Connected!!\n");
                     }
                     serverArea.append("Connect to client!\n");
+
+                    /**
+                     * while client is connected on socket and then will be create new thread for
+                     * run new client
+                     */
                     ClientHandler client_thread = new ClientHandler(client, clients);
                     clients.add(client_thread);
                     Thread starter = new Thread(client_thread);
@@ -194,14 +211,12 @@ public class serverFrame extends javax.swing.JFrame {
     public serverFrame() {
         initComponents();
         userArr = new ArrayList<>();
-        
+
         randomWord(rand);
         manageWord();
         serverArea.append("Random Word: " + ansWord + "\n");
-        
-    }
-    
 
+    }
 
     /** Manage String And Array **/
     public void manageWord() {
@@ -260,7 +275,8 @@ public class serverFrame extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         startButton = new javax.swing.JButton();
@@ -319,23 +335,14 @@ public class serverFrame extends javax.swing.JFrame {
 
         javax.swing.GroupLayout titleBarLayout = new javax.swing.GroupLayout(titleBar);
         titleBar.setLayout(titleBarLayout);
-        titleBarLayout.setHorizontalGroup(
-            titleBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(titleBarLayout.createSequentialGroup()
-                .addContainerGap(120, Short.MAX_VALUE)
-                .addComponent(titleName)
-                .addGap(103, 103, 103)
-                .addComponent(titleExit)
-                .addContainerGap())
-        );
-        titleBarLayout.setVerticalGroup(
-            titleBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(titleBarLayout.createSequentialGroup()
-                .addGroup(titleBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(titleExit)
-                    .addComponent(titleName))
-                .addGap(3, 3, 3))
-        );
+        titleBarLayout.setHorizontalGroup(titleBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(titleBarLayout.createSequentialGroup().addContainerGap(120, Short.MAX_VALUE)
+                        .addComponent(titleName).addGap(103, 103, 103).addComponent(titleExit).addContainerGap()));
+        titleBarLayout.setVerticalGroup(titleBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(titleBarLayout.createSequentialGroup()
+                        .addGroup(titleBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(titleExit).addComponent(titleName))
+                        .addGap(3, 3, 3)));
 
         getContentPane().add(titleBar, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 500, 50));
 
@@ -343,14 +350,10 @@ public class serverFrame extends javax.swing.JFrame {
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 500, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 30, Short.MAX_VALUE)
-        );
+        jPanel1Layout.setHorizontalGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(0, 500, Short.MAX_VALUE));
+        jPanel1Layout.setVerticalGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(0, 30, Short.MAX_VALUE));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 590, 500, 30));
 
@@ -361,24 +364,24 @@ public class serverFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void titleExitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_titleExitMouseClicked
+    private void titleExitMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_titleExitMouseClicked
         // TODO add your handling code here:
         System.exit(0);
-    }//GEN-LAST:event_titleExitMouseClicked
+    }// GEN-LAST:event_titleExitMouseClicked
 
-    private void titleBarMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_titleBarMouseDragged
+    private void titleBarMouseDragged(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_titleBarMouseDragged
 
         // Drag Window Program
         int x = evt.getXOnScreen();
         int y = evt.getYOnScreen();
-        this.setLocation(x-xx,y-yy);
-    }//GEN-LAST:event_titleBarMouseDragged
+        this.setLocation(x - xx, y - yy);
+    }// GEN-LAST:event_titleBarMouseDragged
 
-    private void titleBarMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_titleBarMousePressed
+    private void titleBarMousePressed(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_titleBarMousePressed
         // TODO add your handling code here:
         xx = evt.getX();
         yy = evt.getY();
-    }//GEN-LAST:event_titleBarMousePressed
+    }// GEN-LAST:event_titleBarMousePressed
 
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_startButtonActionPerformed
         // TODO add your handling code here:
@@ -408,7 +411,8 @@ public class serverFrame extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+                | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(serverFrame.class.getName()).log(java.util.logging.Level.SEVERE, null,
                     ex);
         }
