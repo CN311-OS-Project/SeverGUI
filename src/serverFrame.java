@@ -31,7 +31,7 @@ import java.util.logging.Logger;
 public class serverFrame extends javax.swing.JFrame {
     /** Set state */
     private static String Chat = "Chat", username = "Username", len = "Array Length", turn = "Player Turn",
-            coordinate = "Send coordiante", timeOut = "Time Out", isWin = "Who Win", clearPaint = "Clear Painting";
+            coordinate = "Send coordiante", timeOut = "Time Out", isWin = "Who Win", clearPaint = "Clear Painting", defaultColor = "black", Exit = "Exit";
 
     /**
      * Creates new form serverFrame
@@ -92,6 +92,7 @@ public class serverFrame extends javax.swing.JFrame {
                         }
 
                         else if (temp1[lastIndex].equals(timeOut)) {
+                            outToAll("black" + "," + (defaultColor));
                             if (count % 2 == 0) {
                                 outToAll(userArr.get(0) + "," + turn);
                             } else {
@@ -105,6 +106,10 @@ public class serverFrame extends javax.swing.JFrame {
                         }
 
                         else if (temp1[lastIndex].equals(clearPaint)) {
+                            outToAll(text);
+                        }
+
+                        else if (temp1[lastIndex].equals(Exit)) {
                             outToAll(text);
                         }
 
@@ -162,6 +167,25 @@ public class serverFrame extends javax.swing.JFrame {
             else if (temp2[lastIndex].equals(clearPaint)) {
                 for (ClientHandler aClient : clients) {
                     aClient.output.println(msg);
+                }
+            }
+
+            else if (temp2[lastIndex].equals(defaultColor)) {
+                for (ClientHandler aClient : clients) {
+                    aClient.output.println(msg);
+                }
+            }
+
+            else if (temp2[lastIndex].equals(Exit)) {
+                for (int x = 0; x<userArr.size(); x++){
+                    if (userArr.get(x).equals(temp2[0])){
+                        userArr.remove(x);
+                        serverArea.append(temp2[0] + " has Disconnect\n");
+                    }
+                }
+                for (ClientHandler aClient : clients) {
+                    aClient.output.println(msg);
+                    aClient.output.println(String.valueOf(userArr.size()) + "," + len);
                 }
             }
 
