@@ -31,7 +31,8 @@ import java.util.logging.Logger;
 public class serverFrame extends javax.swing.JFrame {
     /** Set state */
     private static String Chat = "Chat", username = "Username", len = "Array Length", turn = "Player Turn",
-            coordinate = "Send coordiante", timeOut = "Time Out", isWin = "Who Win", clearPaint = "Clear Painting", defaultColor = "black", Exit = "Exit";
+            coordinate = "Send coordiante", timeOut = "Time Out", isWin = "Who Win", clearPaint = "Clear Painting",
+            defaultColor = "black", Exit = "Exit";
 
     /**
      * Creates new form serverFrame
@@ -45,7 +46,7 @@ public class serverFrame extends javax.swing.JFrame {
     private int count = 0, xx, yy;
     private ArrayList<String> userArr;
 
-    // Start ClientHandeler Part//
+    /** Start ClientHandeler Part **/
     public class ClientHandler implements Runnable {
         private Socket client;
         private BufferedReader input;
@@ -53,7 +54,6 @@ public class serverFrame extends javax.swing.JFrame {
         private ArrayList<ClientHandler> clients;
         String text, temp1[], temp2[];
         int lastIndex;
-        
 
         public ClientHandler(Socket client, ArrayList<ClientHandler> clients) throws IOException {
             this.client = client;
@@ -177,8 +177,8 @@ public class serverFrame extends javax.swing.JFrame {
             }
 
             else if (temp2[lastIndex].equals(Exit)) {
-                for (int x = 0; x<userArr.size(); x++){
-                    if (userArr.get(x).equals(temp2[0])){
+                for (int x = 0; x < userArr.size(); x++) {
+                    if (userArr.get(x).equals(temp2[0])) {
                         userArr.remove(x);
                         serverArea.append(temp2[0] + " has Disconnect\n");
                     }
@@ -192,9 +192,10 @@ public class serverFrame extends javax.swing.JFrame {
         }
 
     }
-    // End ClientHandeler Part //
 
-    // Start Server Part //
+    /** End ClientHandeler Part **/
+
+    /** Start Server Part **/
     public class Server implements Runnable {
         private static final int PORT = 9090;
         private ArrayList<ClientHandler> clients = new ArrayList<>();
@@ -231,7 +232,7 @@ public class serverFrame extends javax.swing.JFrame {
         }
     }
 
-    // End Server Part //
+    /** End Server Part **/
     public serverFrame() {
         initComponents();
         userArr = new ArrayList<>();
