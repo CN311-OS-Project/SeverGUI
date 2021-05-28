@@ -93,12 +93,16 @@ public class serverFrame extends javax.swing.JFrame {
 
                         else if (temp1[lastIndex].equals(timeOut)) {
                             outToAll("black" + "," + (defaultColor));
-                            if (count % 2 == 0) {
-                                outToAll(userArr.get(0) + "," + turn);
-                            } else {
-                                outToAll(userArr.get(1) + "," + turn);
-                            }
+//                            if (count % 2 == 0) {
+//                                outToAll(userArr.get(0) + "," + turn);
+//                            } else {
+//                                outToAll(userArr.get(1) + "," + turn);
+//                            }
+                            outToAll(userArr.get(count) + "," + turn);
                             count++;
+                            if(count == userArr.size()) {
+                                count = 0;
+                            }
                         }
 
                         else if (temp1[lastIndex].equals(isWin)) {
