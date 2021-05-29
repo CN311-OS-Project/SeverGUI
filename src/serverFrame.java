@@ -52,8 +52,10 @@ public class serverFrame extends javax.swing.JFrame {
         private BufferedReader input;
         private PrintWriter output;
         private ArrayList<ClientHandler> clients;
-        String text, temp1[], temp2[];
+        String text, temp1[], temp2[], newUser;
         int lastIndex;
+        Boolean checkNewUser;
+
 
         public ClientHandler(Socket client, ArrayList<ClientHandler> clients) throws IOException {
             this.client = client;
@@ -74,14 +76,28 @@ public class serverFrame extends javax.swing.JFrame {
                     try {
 
                         if (temp1[lastIndex].equals(username)) {
-                            userArr.add(temp1[0]);
-                            outToAll(text);
-                            serverArea.append(temp1[0] + " has joined\n");
+                            if (userArr.size() < 2) {
+                                addUser(temp1[0]);
+                                outToAll(text);
+                                serverArea.append(userArr.size()+"\n");
+                                for (ClientHandler s : clients) {
+                                    serverArea.append(s.toString() + "\n");
+                                }
+                                serverArea.append("Connect to client!\n");
+                                serverArea.append(temp1[0] + " has joined\n");
 
-                            if (userArr.size() > 1) {
-                                outToAll(userArr.get(0) + "," + turn);
-                                count++;
+                                if (userArr.size() > 1) {
+                                    outToAll(userArr.get(0) + "," + turn);
+                                    count++;
+                                }
+                                
+                            }else{
+                                addUser(temp1[0]);
+                                outToAll(text);
                             }
+
+
+                            
                         } else if (temp1[lastIndex].equals(Chat)) {
                             serverArea.append(temp1[0] + ": " + temp1[1] + "  (state = " + temp1[lastIndex] + ")\n");
                             outToAll(text);
@@ -95,7 +111,7 @@ public class serverFrame extends javax.swing.JFrame {
                             outToAll("black" + "," + (defaultColor));
                             outToAll(userArr.get(count) + "," + turn);
                             count++;
-                            if(count == userArr.size()) {
+                            if (count == userArr.size()) {
                                 count = 0;
                             }
                         }
@@ -109,7 +125,10 @@ public class serverFrame extends javax.swing.JFrame {
                         }
 
                         else if (temp1[lastIndex].equals(Exit)) {
+                            removeUser(temp1[0]);
                             outToAll(text);
+
+                           
                         }
 
                     } catch (Exception e) {
@@ -125,6 +144,19 @@ public class serverFrame extends javax.swing.JFrame {
                     input.close();
                 } catch (IOException e) {
                     e.printStackTrace();
+                }
+            }
+        }
+
+        private void addUser(String user) {
+            userArr.add(user);
+        }
+
+        private void removeUser(String username) {
+            for (int i = 0; i < userArr.size(); i++) {
+                if (userArr.get(i).equals(username)) {
+                    userArr.remove(i);
+                    clients.remove(i);
                 }
             }
         }
@@ -176,12 +208,8 @@ public class serverFrame extends javax.swing.JFrame {
             }
 
             else if (temp2[lastIndex].equals(Exit)) {
-                for (int x = 0; x < userArr.size(); x++) {
-                    if (userArr.get(x).equals(temp2[0])) {
-                        userArr.remove(x);
-                        serverArea.append(temp2[0] + " has Disconnect\n");
-                    }
-                }
+                
+                serverArea.append(temp2[0] + " has Disconnect\n");
                 for (ClientHandler aClient : clients) {
                     aClient.output.println(msg);
                     aClient.output.println(String.valueOf(userArr.size()) + "," + len);
@@ -211,10 +239,6 @@ public class serverFrame extends javax.swing.JFrame {
                     /** wait for client connection */
 
                     Socket client = listener.accept();
-                    for (ClientHandler s : clients) {
-                        serverArea.append(s.toString() + " Connected!!\n");
-                    }
-                    serverArea.append("Connect to client!\n");
 
                     /**
                      * while client is connected on socket and then will be create new thread for
