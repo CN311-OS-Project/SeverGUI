@@ -10,13 +10,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.*;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -39,12 +35,14 @@ public class serverFrame extends javax.swing.JFrame {
      */
 
     Server server;
-    Random rand;
+    static Random rand;
     Font fontTitle;
     ArrayList<String> ansLst, cluLst;
-    private static String clueWord, ansWord;
-    private int count = 0, xx, yy;
     private ArrayList<String> userArr;
+    private int count = 0, xx, yy;
+    private static String clueWord, ansWord;
+    private static int clue_temp1, clue_temp2;
+
 
     /** Start ClientHandeler Part **/
     public class ClientHandler implements Runnable {
@@ -52,10 +50,9 @@ public class serverFrame extends javax.swing.JFrame {
         private BufferedReader input;
         private PrintWriter output;
         private ArrayList<ClientHandler> clients;
-        String text, temp1[], temp2[], newUser;
+        String text, temp1[], temp2[];
         int lastIndex;
         Boolean checkNewUser;
-
 
         public ClientHandler(Socket client, ArrayList<ClientHandler> clients) throws IOException {
             this.client = client;
@@ -76,13 +73,14 @@ public class serverFrame extends javax.swing.JFrame {
                     try {
 
                         if (temp1[lastIndex].equals(username)) {
+                            for (ClientHandler s : clients) {
+                                serverArea.append(s.toString() + "\n");
+                            }
+
                             if (userArr.size() < 2) {
                                 addUser(temp1[0]);
                                 outToAll(text);
-                                serverArea.append(userArr.size()+"\n");
-                                for (ClientHandler s : clients) {
-                                    serverArea.append(s.toString() + "\n");
-                                }
+
                                 serverArea.append("Connect to client!\n");
                                 serverArea.append(temp1[0] + " has joined\n");
 
@@ -90,14 +88,12 @@ public class serverFrame extends javax.swing.JFrame {
                                     outToAll(userArr.get(0) + "," + turn);
                                     count++;
                                 }
-                                
-                            }else{
+
+                            } else {
                                 addUser(temp1[0]);
                                 outToAll(text);
                             }
 
-
-                            
                         } else if (temp1[lastIndex].equals(Chat)) {
                             serverArea.append(temp1[0] + ": " + temp1[1] + "  (state = " + temp1[lastIndex] + ")\n");
                             outToAll(text);
@@ -128,7 +124,6 @@ public class serverFrame extends javax.swing.JFrame {
                             removeUser(temp1[0]);
                             outToAll(text);
 
-                           
                         }
 
                     } catch (Exception e) {
@@ -178,14 +173,14 @@ public class serverFrame extends javax.swing.JFrame {
             } else if (temp2[lastIndex].equals(turn)) {
 
                 for (ClientHandler aClient : clients) {
-                    aClient.output.println(temp2[0] + "," + ansWord + "," + temp2[lastIndex]);
+                    aClient.output.println(temp2[0] + "," + ansWord + "," + clue_temp1 + "," + clue_temp2 + "," + temp2[lastIndex]);
                 }
                 randomWord(rand);
                 serverArea.append("Random Word: " + ansWord + "\n");
 
             } else if (temp2[lastIndex].equals(coordinate)) {
                 for (ClientHandler aClient : clients) {
-                    aClient.output.println(msg);
+                        aClient.output.println(msg);                    
                 }
             }
 
@@ -208,7 +203,7 @@ public class serverFrame extends javax.swing.JFrame {
             }
 
             else if (temp2[lastIndex].equals(Exit)) {
-                
+
                 serverArea.append(temp2[0] + " has Disconnect\n");
                 for (ClientHandler aClient : clients) {
                     aClient.output.println(msg);
@@ -286,9 +281,19 @@ public class serverFrame extends javax.swing.JFrame {
             }
             rand = new Random(System.currentTimeMillis());
             ansWord = words.get(rand.nextInt(words.size()));
+            randClueword(ansWord);
 
         } catch (IOException e) {
             // Handle this
+        }
+    }
+
+    public static void randClueword(String word) {
+        rand = new Random();
+        clue_temp1 = rand.nextInt(ansWord.length() - 1);
+        clue_temp2 = rand.nextInt(ansWord.length() - 1);
+        while (clue_temp1 == clue_temp2) {
+            clue_temp2 = rand.nextInt(ansWord.length() - 1);
         }
     }
 
