@@ -36,6 +36,7 @@ public class serverFrame extends javax.swing.JFrame {
      */
 
     Server server;
+    private String SERVER_IP = "";
     static Random rand;
     Font fontTitle;
     ArrayList<String> ansLst, cluLst;
@@ -43,6 +44,7 @@ public class serverFrame extends javax.swing.JFrame {
     private int count = 0, xx, yy;
     private static String clueWord, ansWord;
     private static int clue_temp1, clue_temp2;
+    Font font;
     
 
 
@@ -230,7 +232,7 @@ public class serverFrame extends javax.swing.JFrame {
         @Override
         public void run() {
             try {
-                InetAddress address = InetAddress.getByName("25.36.242.174");
+                InetAddress address = InetAddress.getByName(SERVER_IP);
                 ServerSocket listener = new ServerSocket(PORT, 10 , address);
                 while (true) {
                     serverArea.append("Waiting for client connection....\n");
@@ -258,11 +260,17 @@ public class serverFrame extends javax.swing.JFrame {
     public serverFrame() {
         initComponents();
         userArr = new ArrayList<>();
-
+        setFont();
         randomWord(rand);
         manageWord();
         serverArea.append("Random Word: " + ansWord + "\n");
 
+    }
+    
+    /** Set Font In Chat **/
+    public void setFont() {
+        font = new Font("Verdana", Font.BOLD, 12);
+        serverArea.setFont(font);
     }
 
     /** Manage String And Array **/
@@ -333,9 +341,12 @@ public class serverFrame extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
-    // Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel4 = new javax.swing.JPanel();
+        ipLebel = new javax.swing.JLabel();
+        ipField = new javax.swing.JTextField();
         startButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         serverArea = new javax.swing.JTextArea();
@@ -349,19 +360,63 @@ public class serverFrame extends javax.swing.JFrame {
         setUndecorated(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        jPanel4.setBackground(new java.awt.Color(102, 153, 255));
+
+        ipLebel.setFont(new java.awt.Font("Tempus Sans ITC", 1, 23)); // NOI18N
+        ipLebel.setForeground(new java.awt.Color(51, 51, 51));
+        ipLebel.setText("IP Address");
+
+        ipField.setFont(new java.awt.Font("Leelawadee", 0, 18)); // NOI18N
+        ipField.setToolTipText("");
+        ipField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ipFieldActionPerformed(evt);
+            }
+        });
+
         startButton.setText("Start");
         startButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 startButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(startButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 80, 30));
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(4, 4, 4)
+                .addComponent(ipLebel)
+                .addGap(10, 10, 10)
+                .addComponent(ipField, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(startButton, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(11, 11, 11))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(9, 9, 9)
+                        .addComponent(startButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(9, 9, 9)
+                        .addComponent(ipLebel))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(7, 7, 7)
+                        .addComponent(ipField)))
+                .addContainerGap())
+        );
+
+        getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 460, 50));
 
         serverArea.setColumns(20);
         serverArea.setRows(5);
         jScrollPane1.setViewportView(serverArea);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, 462, 433));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 462, 433));
 
         titleBar.setBackground(new java.awt.Color(12, 52, 132));
         titleBar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -392,14 +447,23 @@ public class serverFrame extends javax.swing.JFrame {
 
         javax.swing.GroupLayout titleBarLayout = new javax.swing.GroupLayout(titleBar);
         titleBar.setLayout(titleBarLayout);
-        titleBarLayout.setHorizontalGroup(titleBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(titleBarLayout.createSequentialGroup().addContainerGap(120, Short.MAX_VALUE)
-                        .addComponent(titleName).addGap(103, 103, 103).addComponent(titleExit).addContainerGap()));
-        titleBarLayout.setVerticalGroup(titleBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(titleBarLayout.createSequentialGroup()
-                        .addGroup(titleBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(titleExit).addComponent(titleName))
-                        .addGap(3, 3, 3)));
+        titleBarLayout.setHorizontalGroup(
+            titleBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(titleBarLayout.createSequentialGroup()
+                .addContainerGap(120, Short.MAX_VALUE)
+                .addComponent(titleName)
+                .addGap(103, 103, 103)
+                .addComponent(titleExit)
+                .addContainerGap())
+        );
+        titleBarLayout.setVerticalGroup(
+            titleBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(titleBarLayout.createSequentialGroup()
+                .addGroup(titleBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(titleExit)
+                    .addComponent(titleName))
+                .addGap(3, 3, 3))
+        );
 
         getContentPane().add(titleBar, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 500, 50));
 
@@ -407,10 +471,14 @@ public class serverFrame extends javax.swing.JFrame {
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGap(0, 500, Short.MAX_VALUE));
-        jPanel1Layout.setVerticalGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGap(0, 30, Short.MAX_VALUE));
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 500, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+        );
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 590, 500, 30));
 
@@ -420,6 +488,10 @@ public class serverFrame extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void ipFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ipFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ipFieldActionPerformed
 
     private void titleExitMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_titleExitMouseClicked
         // TODO add your handling code here:
@@ -442,9 +514,10 @@ public class serverFrame extends javax.swing.JFrame {
 
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_startButtonActionPerformed
         // TODO add your handling code here:
+        SERVER_IP = ipField.getText();
         Thread starter = new Thread(new Server());
         starter.start();
-
+        
         serverArea.append("Server Started!!\n");
 
     }// GEN-LAST:event_startButtonActionPerformed
@@ -484,8 +557,11 @@ public class serverFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField ipField;
+    private javax.swing.JLabel ipLebel;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea serverArea;
     private javax.swing.JButton startButton;
