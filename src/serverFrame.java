@@ -79,7 +79,7 @@ public class serverFrame extends javax.swing.JFrame {
                             if (userArr.size() < 2) {
                                 addUser(temp1[0]);
                                 outToAll(text);
-
+                                
                                 serverArea.append("Connect to client!\n");
                                 serverArea.append(temp1[0] + " has joined\n");
 
@@ -89,6 +89,8 @@ public class serverFrame extends javax.swing.JFrame {
                                 }
 
                             } else {
+                                serverArea.append("Connect to client!\n");
+                                serverArea.append(temp1[0] + " has joined\n");
                                 addUser(temp1[0]);
                                 outToAll(text);
                             }
