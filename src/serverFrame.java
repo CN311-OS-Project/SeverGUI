@@ -78,9 +78,6 @@ public class serverFrame extends javax.swing.JFrame {
                     try {
 
                         if (temp1[lastIndex].equals(username)) {
-                            for (ClientHandler s : clients) {
-                                serverArea.append(s.toString() + "\n");
-                            }
 
                             if (userArr.size() < 2) {
                                 addUser(temp1[0]);
