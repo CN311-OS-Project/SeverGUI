@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -42,6 +43,7 @@ public class serverFrame extends javax.swing.JFrame {
     private int count = 0, xx, yy;
     private static String clueWord, ansWord;
     private static int clue_temp1, clue_temp2;
+    
 
 
     /** Start ClientHandeler Part **/
@@ -220,6 +222,7 @@ public class serverFrame extends javax.swing.JFrame {
     /** Start Server Part **/
     public class Server implements Runnable {
         private static final int PORT = 9090;
+        
         private ArrayList<ClientHandler> clients = new ArrayList<>();
 
         /** Creates a new Socket Server */
@@ -227,7 +230,8 @@ public class serverFrame extends javax.swing.JFrame {
         @Override
         public void run() {
             try {
-                ServerSocket listener = new ServerSocket(PORT);
+                InetAddress address = InetAddress.getByName("25.36.242.174");
+                ServerSocket listener = new ServerSocket(PORT, 10 , address);
                 while (true) {
                     serverArea.append("Waiting for client connection....\n");
 
