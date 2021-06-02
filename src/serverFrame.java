@@ -43,11 +43,10 @@ public class serverFrame extends javax.swing.JFrame {
     private static String clueWord, ansWord;
     private static int clue_temp1, clue_temp2;
     Font font;
-    
-
 
     /** Start ClientHandeler Part **/
     public class ClientHandler implements Runnable {
+
         private Socket client;
         private BufferedReader input;
         private PrintWriter output;
@@ -79,7 +78,7 @@ public class serverFrame extends javax.swing.JFrame {
                             if (userArr.size() < 2) {
                                 addUser(temp1[0]);
                                 outToAll(text);
-                                
+
                                 serverArea.append("Connect to client!\n");
                                 serverArea.append(temp1[0] + " has joined\n");
 
@@ -174,14 +173,15 @@ public class serverFrame extends javax.swing.JFrame {
             } else if (temp2[lastIndex].equals(turn)) {
 
                 for (ClientHandler aClient : clients) {
-                    aClient.output.println(temp2[0] + "," + ansWord + "," + clue_temp1 + "," + clue_temp2 + "," + temp2[lastIndex]);
+                    aClient.output.println(
+                            temp2[0] + "," + ansWord + "," + clue_temp1 + "," + clue_temp2 + "," + temp2[lastIndex]);
                 }
                 randomWord(rand);
                 serverArea.append("Random Word: " + ansWord + "\n");
 
             } else if (temp2[lastIndex].equals(coordinate)) {
                 for (ClientHandler aClient : clients) {
-                        aClient.output.println(msg);                    
+                    aClient.output.println(msg);
                 }
             }
 
@@ -219,26 +219,26 @@ public class serverFrame extends javax.swing.JFrame {
     /** End ClientHandeler Part **/
 
     /** Start Server Part **/
+
     public class Server implements Runnable {
         private static final int PORT = 9090;
-        
         private ArrayList<ClientHandler> clients = new ArrayList<>();
 
         /** Creates a new Socket Server */
-
         @Override
         public void run() {
             try {
+
                 InetAddress address = InetAddress.getByName(SERVER_IP);
-                ServerSocket listener = new ServerSocket(PORT, 10 , address);
+                ServerSocket listener = new ServerSocket(PORT, 10, address);
+                serverArea.append("Server Started!!\n");
+
                 while (true) {
                     serverArea.append("Waiting for client connection....\n");
-
                     /** wait for client connection */
-
                     Socket client = listener.accept();
 
-                    /**
+                    /*
                      * while client is connected on socket and then will be create new thread for
                      * run new client
                      */
@@ -255,22 +255,21 @@ public class serverFrame extends javax.swing.JFrame {
 
     /** End Server Part **/
     public serverFrame() {
+        userArr = new ArrayList<>();
         initComponents();
         setIcon();
-        
-        userArr = new ArrayList<>();
         setFont();
         randomWord(rand);
         manageWord();
         serverArea.append("Random Word: " + ansWord + "\n");
 
     }
-    
+
     /** Set Icon **/
     public void setIcon() {
         setIconImage(Toolkit.getDefaultToolkit().getImage((getClass().getResource("icon3.png"))));
     }
-    
+
     /** Set Font In Chat **/
     public void setFont() {
         font = new Font("Verdana", Font.BOLD, 12);
@@ -345,7 +344,8 @@ public class serverFrame extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jPanel4 = new javax.swing.JPanel();
@@ -387,32 +387,21 @@ public class serverFrame extends javax.swing.JFrame {
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(4, 4, 4)
-                .addComponent(ipLebel)
-                .addGap(10, 10, 10)
-                .addComponent(ipField, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(startButton, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(11, 11, 11))
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(9, 9, 9)
-                        .addComponent(startButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(9, 9, 9)
-                        .addComponent(ipLebel))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(7, 7, 7)
-                        .addComponent(ipField)))
-                .addContainerGap())
-        );
+        jPanel4Layout.setHorizontalGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel4Layout.createSequentialGroup().addGap(4, 4, 4).addComponent(ipLebel).addGap(10, 10, 10)
+                        .addComponent(ipField, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
+                        .addGap(18, 18, 18).addComponent(startButton, javax.swing.GroupLayout.PREFERRED_SIZE, 77,
+                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(11, 11, 11)));
+        jPanel4Layout.setVerticalGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel4Layout.createSequentialGroup().addGap(9, 9, 9).addComponent(
+                                        startButton, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(jPanel4Layout.createSequentialGroup().addGap(9, 9, 9).addComponent(ipLebel))
+                                .addGroup(jPanel4Layout.createSequentialGroup().addGap(7, 7, 7).addComponent(ipField)))
+                        .addContainerGap()));
 
         getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 460, 50));
 
@@ -451,23 +440,14 @@ public class serverFrame extends javax.swing.JFrame {
 
         javax.swing.GroupLayout titleBarLayout = new javax.swing.GroupLayout(titleBar);
         titleBar.setLayout(titleBarLayout);
-        titleBarLayout.setHorizontalGroup(
-            titleBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(titleBarLayout.createSequentialGroup()
-                .addContainerGap(120, Short.MAX_VALUE)
-                .addComponent(titleName)
-                .addGap(103, 103, 103)
-                .addComponent(titleExit)
-                .addContainerGap())
-        );
-        titleBarLayout.setVerticalGroup(
-            titleBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(titleBarLayout.createSequentialGroup()
-                .addGroup(titleBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(titleExit)
-                    .addComponent(titleName))
-                .addGap(3, 3, 3))
-        );
+        titleBarLayout.setHorizontalGroup(titleBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(titleBarLayout.createSequentialGroup().addContainerGap(120, Short.MAX_VALUE)
+                        .addComponent(titleName).addGap(103, 103, 103).addComponent(titleExit).addContainerGap()));
+        titleBarLayout.setVerticalGroup(titleBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(titleBarLayout.createSequentialGroup()
+                        .addGroup(titleBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(titleExit).addComponent(titleName))
+                        .addGap(3, 3, 3)));
 
         getContentPane().add(titleBar, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 500, 50));
 
@@ -475,14 +455,10 @@ public class serverFrame extends javax.swing.JFrame {
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 500, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 30, Short.MAX_VALUE)
-        );
+        jPanel1Layout.setHorizontalGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(0, 500, Short.MAX_VALUE));
+        jPanel1Layout.setVerticalGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(0, 30, Short.MAX_VALUE));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 590, 500, 30));
 
@@ -493,9 +469,9 @@ public class serverFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void ipFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ipFieldActionPerformed
+    private void ipFieldActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_ipFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_ipFieldActionPerformed
+    }// GEN-LAST:event_ipFieldActionPerformed
 
     private void titleExitMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_titleExitMouseClicked
         // TODO add your handling code here:
@@ -522,8 +498,6 @@ public class serverFrame extends javax.swing.JFrame {
         ipField.setEditable(false);
         Thread starter = new Thread(new Server());
         starter.start();
-        
-        serverArea.append("Server Started!!\n");
 
     }// GEN-LAST:event_startButtonActionPerformed
 
